@@ -1,5 +1,6 @@
 package com.christian.api.service;
 
+import com.christian.api.exception.ResourceNotFoundException;
 import com.christian.api.model.Produto;
 import com.christian.api.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
@@ -17,20 +18,23 @@ public class ClienteService {
         this.repository = repository;
     }
 
-    public Cliente criaCliente(Cliente cliente){
+    public Cliente criaCliente(Cliente cliente) {
         return repository.save(cliente);
     }
 
-    public List<Cliente> listaClientes(){
+    public List<Cliente> listaClientes() {
         return repository.findAll();
     }
 
-    public Cliente listaClientesPorId(Long id){
-        Optional<Cliente> cliente = repository.findById(id);
-        return cliente.orElse(null);
+    public Cliente listaClientesPorId(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
     }
 
-    public void deletaCliente(Long id){
+    public void deletaCliente(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Cliente não encontrado");
+        }
         repository.deleteById(id);
     }
 }
