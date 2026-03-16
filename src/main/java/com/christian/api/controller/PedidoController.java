@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedido")
+@RequestMapping("/pedidos")
 public class PedidoController {
 
     private final PedidoService service;
@@ -27,12 +27,13 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<Pedido> listaPedidoPorId(){
+    public List<Pedido> listaPedido(){
         return service.listaPedido();
     }
 
     @DeleteMapping("/{id}")
     public void deletaPedido(@PathVariable Long id){
+
         service.deletaPedido(id);
     }
 }

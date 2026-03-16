@@ -1,15 +1,14 @@
 package com.christian.api.service;
 
+import com.christian.api.exception.ResourceNotFoundException;
 import com.christian.api.model.Produto;
 import com.christian.api.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
-
     private final ProdutoRepository repository;
 
     public ProdutoService(ProdutoRepository repository) {
@@ -25,11 +24,14 @@ public class ProdutoService {
     }
 
     public Produto listaProdutoPorId(Long id) {
-        Optional<Produto> produto = repository.findById(id);
-        return produto.orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
     }
 
     public void deletaProduto(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Produto não encontrado");
+        }
         repository.deleteById(id);
     }
 
